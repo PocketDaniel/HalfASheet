@@ -1,29 +1,28 @@
 //
-//  If.swift
+//  EitherView.swift
 //
 //  Created by Franklyn Weber on 15/01/2021.
 //
 
 import SwiftUI
 
-
-struct If: View {
-    
+struct EitherView: View {
     private let viewProvider: () -> AnyView
-    
+
+    // MARK: - Plain Bool condition initializers
     
     init<V: View>(_ isTrue: Binding<Bool>, @ViewBuilder _ viewProvider: @escaping () -> V) {
         self.viewProvider = {
             isTrue.wrappedValue ? AnyView(viewProvider()) : AnyView(EmptyView())
         }
     }
-    
+
     init<V: View, O: View>(_ isTrue: Binding<Bool>, @ViewBuilder _ viewProvider: @escaping () -> V, @ViewBuilder else otherViewProvider: @escaping () -> O) {
         self.viewProvider = {
             isTrue.wrappedValue ? AnyView(viewProvider()) : AnyView(otherViewProvider())
         }
     }
-    
+
     init<V: View>(_ condition: @autoclosure @escaping () -> Bool, @ViewBuilder _ viewProvider: @escaping () -> V) {
         self.viewProvider = {
             condition() ? AnyView(viewProvider()) : AnyView(EmptyView())
@@ -35,18 +34,9 @@ struct If: View {
             condition() ? AnyView(viewProvider()) : AnyView(otherViewProvider())
         }
     }
-    
-    var body: some View {
-        return viewProvider()
-    }
-}
 
+    // MARK: - Item related condition (unwrapper) initializers
 
-struct IfLet: View {
-    
-    private let viewProvider: () -> AnyView
-    
-    
     init<T, V: View>(_ item: Binding<T?>, @ViewBuilder _ viewProvider: @escaping (T) -> V) {
         self.viewProvider = {
             AnyView(item.wrappedValue.map {
@@ -54,7 +44,7 @@ struct IfLet: View {
             })
         }
     }
-    
+
     init<T, V: View, O: View>(_ item: Binding<T?>, @ViewBuilder _ viewProvider: @escaping (T) -> V, @ViewBuilder else otherViewProvider: @escaping () -> O) {
         self.viewProvider = {
             if let item = item.wrappedValue {
@@ -64,7 +54,7 @@ struct IfLet: View {
             }
         }
     }
-    
+
     init<T, V: View>(_ item: T?, @ViewBuilder _ viewProvider: @escaping (T) -> V) {
         self.viewProvider = {
             AnyView(item.map {
@@ -72,7 +62,7 @@ struct IfLet: View {
             })
         }
     }
-    
+
     init<T, V: View, O: View>(_ item: T?, @ViewBuilder _ viewProvider: @escaping (T) -> V, @ViewBuilder else otherViewProvider: @escaping () -> O) {
         self.viewProvider = {
             if let item = item {
@@ -82,7 +72,7 @@ struct IfLet: View {
             }
         }
     }
-    
+
     var body: some View {
         return viewProvider()
     }
