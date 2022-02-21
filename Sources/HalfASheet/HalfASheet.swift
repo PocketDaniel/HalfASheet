@@ -10,6 +10,7 @@ public struct HalfASheet<Content: View>: View {
     @State private var dragOffset: CGFloat = 0
     @State private var contentRect: CGRect = .zero
 
+    internal var appearanceAnimationDuration: Double
     internal var backgroundColor: Color
     internal var closeButtonColor: Color
     internal var dimmingBackgoundColor: Color
@@ -41,6 +42,7 @@ public struct HalfASheet<Content: View>: View {
         self.title = title
         self.content = content
         
+        self.appearanceAnimationDuration = configuration?.appearanceAnimationDuration ?? 0.3
         self.backgroundColor = configuration?.backgroundColor ?? Color.white
         self.closeButtonColor = configuration?.closeButtonColor ?? Color.gray.opacity(0.4)
         self.dimmingBackgoundColor = configuration?.dimmingBackgoundColor ?? Color.black.opacity(0.25)
@@ -131,7 +133,7 @@ public struct HalfASheet<Content: View>: View {
                 }
             }
         }
-        .animation(.default, value: isPresented)
+        .animation(.easeInOut(duration: appearanceAnimationDuration), value: isPresented)
     }
 }
 

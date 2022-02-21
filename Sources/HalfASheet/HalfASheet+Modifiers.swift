@@ -9,6 +9,14 @@ import SwiftUI
 
 extension HalfASheet {
     
+    /// The animation duration for appearance of HalfASheet
+    /// - Parameter appearanceAnimationDuration: a Double
+    public func appearanceAnimationDuration(_ appearanceAnimationDuration: Double) -> Self {
+        var copy = self
+        copy.appearanceAnimationDuration = appearanceAnimationDuration
+        return copy
+    }
+
     /// The background colour for the HalfASheet
     /// - Parameter backgroundColor: a Color
     public func backgroundColor(_ backgroundColor: Color) -> Self {

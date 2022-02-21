@@ -7,6 +7,7 @@
 import SwiftUI
 
 public struct HalfASheetConfiguration {
+    public var appearanceAnimationDuration: Double?
     public var backgroundColor: Color?
     public var closeButtonColor: Color?
     public var dimmingBackgoundColor: Color?
@@ -18,6 +19,7 @@ public struct HalfASheetConfiguration {
     public var maxOffsetForDraggingUp: CGFloat?
     
     public init(
+        appearanceAnimationDuration: Double? = nil,
         backgroundColor: Color? = nil,
         closeButtonColor: Color? = nil,
         dimmingBackgoundColor: Color? = nil,
@@ -28,6 +30,7 @@ public struct HalfASheetConfiguration {
         allowsButtonDismiss: Bool? = nil,
         maxOffsetForDraggingUp: CGFloat? = nil
     ) {
+        self.appearanceAnimationDuration = appearanceAnimationDuration
         self.backgroundColor = backgroundColor
         self.closeButtonColor = closeButtonColor
         self.dimmingBackgoundColor = dimmingBackgoundColor
