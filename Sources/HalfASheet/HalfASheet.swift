@@ -94,9 +94,7 @@ public struct HalfASheet<Content: View>: View {
                         Spacer()
                         
                         VStack(spacing: 0) {
-                            EitherView(title != nil || allowsButtonDismiss) {
-                                titleView
-                            }
+                            titleView
 
                             content()
                                 .padding(actualContentInsets)
@@ -143,26 +141,31 @@ extension HalfASheet {
     private var titleView: EitherView {
         EitherView(title) { title in
             HStack(alignment: .center) {
-                // NOTE: To properly center Text view
-                closeButton
-                    .opacity(0)
-                    .disabled(true)
+                EitherView(allowsButtonDismiss) {
+                    // NOTE: To properly center Text view
+                    closeButton
+                        .opacity(0)
+                        .disabled(true)
+                }
                 
                 Spacer()
                 
                 Text(title)
-                    .font(Font.headline.weight(.semibold))
-                    .padding(0.0)
+                    .padding(22.0)
                     .lineLimit(1)
                 
                 Spacer()
                 
-                closeButton
+                EitherView(allowsButtonDismiss) {
+                    closeButton
+                }
             }
         } else: {
-            HStack {
-                Spacer()
-                closeButton
+            EitherView(allowsButtonDismiss) {
+                HStack {
+                    Spacer()
+                    closeButton
+                }
             }
         }
     }
