@@ -12,13 +12,11 @@ public struct HalfASheet<Content: View>: View {
 
     internal var appearanceAnimationDuration: Double
     internal var backgroundColor: Color
-    internal var closeButtonColor: Color
     internal var dimmingBackgoundColor: Color
     internal var height: HalfASheetHeight
     internal var contentInsets: EdgeInsets
     internal var cornerRadius: CGFloat
     internal var allowsDraggingToDismiss: Bool
-    internal var allowsButtonDismiss: Bool
 
     /// NOTE: When allowsDraggingToDismiss is set to true we use this variable to:
     /// 1. Set additional bottom offset to the sheet view to prevent
@@ -29,28 +27,23 @@ public struct HalfASheet<Content: View>: View {
     internal var maxOffsetForDraggingUp: CGFloat
         
     @Binding private var isPresented: Bool
-    private let title: String?
     private let content: () -> Content
 
     public init(
         isPresented: Binding<Bool>,
-        title: String? = nil,
         @ViewBuilder content: @escaping () -> Content,
         configuration: HalfASheetConfiguration? = nil
     ) {
         _isPresented = isPresented
-        self.title = title
         self.content = content
         
         self.appearanceAnimationDuration = configuration?.appearanceAnimationDuration ?? 0.3
         self.backgroundColor = configuration?.backgroundColor ?? Color.white
-        self.closeButtonColor = configuration?.closeButtonColor ?? Color.gray.opacity(0.4)
-        self.dimmingBackgoundColor = configuration?.dimmingBackgoundColor ?? Color.black.opacity(0.25)
+        self.dimmingBackgoundColor = configuration?.dimmingBackgoundColor ?? Color.black.opacity(0.5)
         self.height = configuration?.height ?? .proportional(0.84)
         self.contentInsets = configuration?.contentInsets ?? EdgeInsets(top: 7, leading: 16, bottom: 12, trailing: 16)
         self.cornerRadius = configuration?.cornerRadius ?? 15
         self.allowsDraggingToDismiss = configuration?.allowsDraggingToDismiss ?? true
-        self.allowsButtonDismiss = configuration?.allowsButtonDismiss ?? true
         self.maxOffsetForDraggingUp = configuration?.maxOffsetForDraggingUp ?? 44
     }
     
@@ -94,8 +87,13 @@ public struct HalfASheet<Content: View>: View {
                         Spacer()
                         
                         VStack(spacing: 0) {
-                            titleView
-
+                            EitherView(allowsDraggingToDismiss) {
+                                Capsule()
+                                    .fill(Color.secondary)
+                                    .frame(width: 30, height: 3)
+                                    .padding(.top)
+                            }
+                            
                             content()
                                 .padding(actualContentInsets)
                             
@@ -138,38 +136,6 @@ public struct HalfASheet<Content: View>: View {
 
 // MARK: - Private
 extension HalfASheet {
-    private var titleView: EitherView {
-        EitherView(title) { title in
-            HStack(alignment: .center) {
-                EitherView(allowsButtonDismiss) {
-                    // NOTE: To properly center Text view
-                    closeButton
-                        .opacity(0)
-                        .disabled(true)
-                }
-                
-                Spacer()
-                
-                Text(title)
-                    .padding(22.0)
-                    .lineLimit(1)
-                
-                Spacer()
-                
-                EitherView(allowsButtonDismiss) {
-                    closeButton
-                }
-            }
-        } else: {
-            EitherView(allowsButtonDismiss) {
-                HStack {
-                    Spacer()
-                    closeButton
-                }
-            }
-        }
-    }
-    
     private func dragGesture(_ geometry: GeometryProxy) -> _EndedGesture<_ChangedGesture<DragGesture>> {
         DragGesture()
             .onChanged { dragValue in
@@ -203,18 +169,7 @@ extension HalfASheet {
                 }
             }
     }
-    
-    private var closeButton: AnyView {
-        Button {
-            dismiss()
-        } label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(Font.title.weight(.semibold))
-                .accentColor(closeButtonColor)
-                .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 13))
-        }.toAnyView()
-    }
-    
+        
     private func dismiss() {
         isPresented = false
     }

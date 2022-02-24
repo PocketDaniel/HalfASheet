@@ -25,14 +25,6 @@ extension HalfASheet {
         return copy
     }
 
-    /// The color for the close button
-    /// - Parameter closeButtonColor: a Color
-    public func closeButtonColor(_ closeButtonColor: Color) -> Self {
-        var copy = self
-        copy.closeButtonColor = closeButtonColor
-        return copy
-    }
-
     /// The color for the dimming background view
     /// - Parameter dimmingBackgoundColor: a Color
     public func dimmingBackgoundColor(_ dimmingBackgoundColor: Color) -> Self {
@@ -71,13 +63,6 @@ extension HalfASheet {
         copy.allowsDraggingToDismiss = false
         return copy
     }
-
-    /// Use this to disable the button-to-dismiss functionality
-    public var disableButtonToDismiss: Self {
-        var copy = self
-        copy.allowsButtonDismiss = false
-        return copy
-    }
     
     /// Changes maximum allowed offset for upwards-drag animation / gesture
     /// - Parameter maxOffsetForDraggingUp: a CGFloat
@@ -94,12 +79,10 @@ extension View {
     /// View extension in the style of .sheet - offers no real customisation. If more flexibility is required, use HalfASheet(...) directly, and apply the required modifiers
     /// - Parameters:
     ///   - isPresented: binding to a Bool which controls whether or not to show the partial sheet
-    ///   - title: an optional title for the sheet
     ///   - content: the sheet's content
     ///   - configuration: an optional configuration override for HalfASheet view
     public func halfASheet<T: View>(
         isPresented: Binding<Bool>,
-        title: String? = nil,
         @ViewBuilder content: @escaping () -> T,
         configuration: HalfASheetConfiguration?
     ) -> some View {
@@ -107,7 +90,6 @@ extension View {
             content: {
                 HalfASheet(
                     isPresented: isPresented,
-                    title: title,
                     content: content,
                     configuration: configuration
                 )
